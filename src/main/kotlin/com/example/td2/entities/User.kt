@@ -5,6 +5,10 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
@@ -27,4 +31,11 @@ open class User {
 
     open var suspended:Boolean=false
 
+    @ManyToOne
+    @JoinColumn(name = "idOrganization", nullable = false)
+    open lateinit var organization: Organization
+
+    @ManyToMany
+    @JoinTable(name = "user_groups")
+    open val groups = mutableSetOf<Groupe>()
 }

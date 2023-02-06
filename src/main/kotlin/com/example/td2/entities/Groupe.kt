@@ -1,10 +1,6 @@
 package com.example.td2.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 open class Groupe {
@@ -15,10 +11,18 @@ open class Groupe {
     @Column(nullable = false, unique = true, length = 45)
     open lateinit var name:String
 
-    @Column(length = 60)
+    @Column(nullable = false, unique = true)
     open var email:String?=null
 
     @Column(length = 30)
     open var aliases:String?=null
+
+
+    @ManyToOne
+    @JoinColumn(name = "idOrganization", nullable = false)
+    open lateinit var organization: Organization
+
+    @ManyToMany(mappedBy = "groups")
+    open val users = mutableSetOf<User>()
 
 }

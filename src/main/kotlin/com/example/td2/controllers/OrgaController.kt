@@ -1,11 +1,18 @@
 package com.example.td2.controllers
 
+import com.example.td2.entities.Organization
+import com.example.td2.entities.User
 import com.example.td2.repositories.OrganizationRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.stereotype.Repository
 import org.springframework.ui.ModelMap
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.servlet.view.RedirectView
+import java.lang.ProcessBuilder.Redirect
 import javax.management.modelmbean.ModelMBean
 
 @Controller
@@ -21,4 +28,30 @@ class OrgaController {
         model["orgas"]=orgaRepository.findAll()
         return "/orgas/index"
     }
+
+
+    @GetMapping("/new")
+    fun newAction(model:ModelMap):String{
+        model["orga"]=Organization()
+        return "/orgas/form";
+    }
+
+    @PostMapping("/new")
+    fun submitnewAction(
+            @ModelAttribute orga:Organization,
+            @ModelAttribute users:String
+    ):RedirectView{
+        val usersArray=users.split("\n").forEach{
+            val user = User()
+            val(firstname, lastname)=it.split(" ")
+            user.firstname=firstname
+            user.lastname=lastname
+            user.email="$lastname.$firstname@${orga.domain}"
+            orga.addUser(user)
+        }
+
+        orgaRepository.save(orga)
+        return RedirectView("/orgas/")
+    }
+
 }
