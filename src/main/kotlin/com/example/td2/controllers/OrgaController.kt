@@ -43,10 +43,10 @@ class OrgaController {
     ):RedirectView{
         val usersArray=users.split("\n").forEach{
             val user = User()
-            val(firstname, lastname)=it.split(" ")
-            user.firstname=firstname
-            user.lastname=lastname
-            user.email="$lastname.$firstname@${orga.domain}"
+            val values=it.split(" ")
+            user.firstname=values.getOrNull(0)
+            user.lastname=values.getOrNull(1)
+            user.email="${user.lastname}.${user.lastname}.@${orga.domain}"
             orga.addUser(user)
         }
 
